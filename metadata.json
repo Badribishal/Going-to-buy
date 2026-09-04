@@ -1,0 +1,6 @@
+{
+  "name": "BuySpace",
+  "description": "Personal wishlist and financial savings planner to track items to buy and save money toward them.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
