@@ -66,6 +66,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -168,8 +169,12 @@ fun AddProductModal(
                     text = "Add to Wishlist",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
                 )
+                Spacer(modifier = Modifier.width(8.dp))
                 IconButton(onClick = onDismiss) {
                     Icon(imageVector = Icons.Default.Close, contentDescription = "Close")
                 }
@@ -808,8 +813,12 @@ fun AllocateMoneyDialog(
                         text = "Allocate Toward Goal",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
                     )
+                    Spacer(modifier = Modifier.width(8.dp))
                     IconButton(onClick = onDismiss) {
                         Icon(Icons.Default.Close, contentDescription = "Close")
                     }
@@ -1184,8 +1193,12 @@ fun EditProductModal(
                     text = "Edit Product",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
                 )
+                Spacer(modifier = Modifier.width(8.dp))
                 IconButton(onClick = onDismiss) {
                     Icon(imageVector = Icons.Default.Close, contentDescription = "Close")
                 }
@@ -1393,10 +1406,10 @@ fun EditProductModal(
                             category = category,
                             priority = priority,
                             notes = notes.trim(),
-                            status = if (saved >= price && price > 0 && product.status != ProductStatus.PURCHASED.name) {
-                                ProductStatus.READY_TO_BUY.name
-                            } else {
-                                product.status
+                            status = when {
+                                product.status == ProductStatus.PURCHASED.name -> ProductStatus.PURCHASED.name
+                                saved >= price && price > 0 -> ProductStatus.READY_TO_BUY.name
+                                else -> ProductStatus.SAVING.name
                             }
                         )
                     )

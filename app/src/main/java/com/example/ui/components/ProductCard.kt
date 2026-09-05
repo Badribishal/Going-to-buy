@@ -306,7 +306,13 @@ fun ProductCard(
                             .clip(RoundedCornerShape(8.dp))
                             .clickable {
                                 try {
-                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(product.originalUrl))
+                                    val rawUrl = product.originalUrl.trim()
+                                    val safeUrl = if (!rawUrl.startsWith("http://", ignoreCase = true) && !rawUrl.startsWith("https://", ignoreCase = true)) {
+                                        "https://$rawUrl"
+                                    } else {
+                                        rawUrl
+                                    }
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(safeUrl))
                                     context.startActivity(intent)
                                 } catch (_: Exception) {}
                             }

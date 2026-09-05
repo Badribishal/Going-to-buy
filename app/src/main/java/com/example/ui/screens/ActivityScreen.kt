@@ -42,6 +42,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.R
 import com.example.data.model.ActivityLogEntity
@@ -116,7 +117,7 @@ fun ActivityScreen(
         if (activities.isNotEmpty()) {
             items(
                 items = activities,
-                key = { it.id },
+                key = { "${it.id}_${it.timestamp}" },
                 contentType = { "activity_item" }
             ) { item ->
                 val (icon, tintColor) = when (item.type) {
@@ -170,13 +171,17 @@ fun ActivityScreen(
                                 text = item.title,
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = MaterialTheme.colorScheme.onSurface,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
                             )
                             if (item.description.isNotBlank()) {
                                 Text(
                                     text = item.description,
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 3,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                             }
                             Spacer(modifier = Modifier.height(2.dp))

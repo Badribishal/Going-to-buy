@@ -260,7 +260,7 @@ fun HomeScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         // Col 1: Saved
-                        Column {
+                        Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = "SAVED",
                                 style = MaterialTheme.typography.labelSmall,
@@ -273,12 +273,17 @@ fun HomeScreen(
                                 text = CurrencyFormatter.format(summary.totalSaved),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
 
                         // Col 2: Remaining
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
                             Text(
                                 text = "REMAINING",
                                 style = MaterialTheme.typography.labelSmall,
@@ -291,12 +296,17 @@ fun HomeScreen(
                                 text = CurrencyFormatter.format(summary.remainingAmount),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
 
                         // Col 3: Saved Products Count
-                        Column(horizontalAlignment = Alignment.End) {
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            horizontalAlignment = Alignment.End
+                        ) {
                             Text(
                                 text = "WISHLIST",
                                 style = MaterialTheme.typography.labelSmall,
@@ -309,7 +319,9 @@ fun HomeScreen(
                                 text = "${summary.totalItemsCount} items",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
                     }
@@ -618,15 +630,20 @@ fun ClosestToGoalCard(
             ) {
                 Surface(
                     shape = RoundedCornerShape(6.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
+                    modifier = Modifier.weight(1f, fill = false)
                 ) {
                     Text(
                         text = product.storeName,
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                     )
                 }
+
+                Spacer(modifier = Modifier.width(6.dp))
 
                 Text(
                     text = "${product.progressPercent}%",
@@ -674,8 +691,13 @@ fun ClosestToGoalCard(
                     text = "Need ${CurrencyFormatter.format(product.remainingAmount)}",
                     style = MaterialTheme.typography.labelSmall,
                     color = AmberGold,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false)
                 )
+
+                Spacer(modifier = Modifier.width(6.dp))
 
                 Surface(
                     shape = RoundedCornerShape(8.dp),

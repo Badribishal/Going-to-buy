@@ -49,11 +49,13 @@ import com.example.ui.viewmodel.BuySpaceViewModel
 
 class MainActivity : ComponentActivity() {
 
+    private val sharedUrlState = mutableStateOf<String?>(null)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val sharedUrl = extractUrlFromIntent(intent)
+        sharedUrlState.value = extractUrlFromIntent(intent)
 
         val database = BuySpaceDatabase.getDatabase(applicationContext)
         val repository = BuySpaceRepository(
@@ -78,7 +80,8 @@ class MainActivity : ComponentActivity() {
             BuySpaceTheme(themeMode = themeMode) {
                 BuySpaceApp(
                     viewModel = viewModel,
-                    initialSharedUrl = sharedUrl,
+                    initialSharedUrl = sharedUrlState.value,
+                    onClearSharedUrl = { sharedUrlState.value = null },
                     currentThemeMode = themeMode,
                     onThemeModeChange = { newMode ->
                         themeMode = newMode
@@ -92,6 +95,10 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
+        val newUrl = extractUrlFromIntent(intent)
+        if (!newUrl.isNullOrBlank()) {
+            sharedUrlState.value = newUrl
+        }
     }
 
     private fun extractUrlFromIntent(intent: Intent?): String? {
@@ -111,6 +118,7 @@ class MainActivity : ComponentActivity() {
 fun BuySpaceApp(
     viewModel: BuySpaceViewModel,
     initialSharedUrl: String? = null,
+    onClearSharedUrl: () -> Unit = {},
     currentThemeMode: ThemeMode = ThemeMode.SYSTEM,
     onThemeModeChange: (ThemeMode) -> Unit = {}
 ) {
@@ -139,6 +147,7 @@ fun BuySpaceApp(
         if (!initialSharedUrl.isNullOrBlank()) {
             currentSharedUrl = initialSharedUrl
             showAddProductModal = true
+            onClearSharedUrl()
             coroutineScope.launch {
                 pagerState.scrollToPage(0)
             }

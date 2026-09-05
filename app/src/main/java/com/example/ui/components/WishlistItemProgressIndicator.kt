@@ -246,6 +246,7 @@ fun WishlistItemCircularProgressIndicator(
                 }
 
                 Row(
+                    modifier = Modifier.weight(1f, fill = false),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
@@ -253,12 +254,16 @@ fun WishlistItemCircularProgressIndicator(
                         text = "Saved ${CurrencyFormatter.format(savedAmount)}",
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
-                        color = activeColor
+                        color = activeColor,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Text(
                         text = "of ${CurrencyFormatter.format(targetPrice)}",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
 
@@ -366,6 +371,7 @@ fun WishlistItemProgressBar(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(
+                    modifier = Modifier.weight(1f, fill = false),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
@@ -373,7 +379,9 @@ fun WishlistItemProgressBar(
                         text = "Saved ${CurrencyFormatter.format(savedAmount)}",
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.SemiBold,
-                        color = activeColor
+                        color = activeColor,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Text(
                         text = "($percentage%)",
@@ -382,6 +390,8 @@ fun WishlistItemProgressBar(
                         color = if (isFunded) EmeraldDark else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+
+                Spacer(modifier = Modifier.width(6.dp))
 
                 if (isPurchased) {
                     Surface(
@@ -425,7 +435,9 @@ fun WishlistItemProgressBar(
                         text = "Need ${CurrencyFormatter.format(remaining)}",
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }

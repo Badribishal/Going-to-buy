@@ -109,7 +109,26 @@ class BuySpaceRepository(
         val wasFunded = current?.isFunded == true
         val isNowFunded = product.savedAmount >= product.targetPrice && product.targetPrice > 0
 
-        productDao.updateProduct(product)
+        // Synchronize savings pool total if savedAmount was manually modified
+        val savedDiff = product.savedAmount - (current?.savedAmount ?: 0.0)
+        if (savedDiff != 0.0) {
+            val acc = savingsDao.getAccountSync() ?: SavingsAccountEntity()
+            savingsDao.insertOrUpdateAccount(
+                acc.copy(
+                    totalDeposited = maxOf(0.0, acc.totalDeposited + savedDiff),
+                    lastUpdated = System.currentTimeMillis()
+                )
+            )
+        }
+
+        val correctedProduct = if (product.status != ProductStatus.PURCHASED.name) {
+            if (isNowFunded) product.copy(status = ProductStatus.READY_TO_BUY.name)
+            else product.copy(status = ProductStatus.SAVING.name)
+        } else {
+            product
+        }
+
+        productDao.updateProduct(correctedProduct)
 
         if (!wasFunded && isNowFunded) {
             activityDao.insertActivity(
