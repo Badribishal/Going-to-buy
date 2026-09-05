@@ -286,4 +286,10 @@ class BuySpaceViewModel(
             repository.markProductActive(product)
         }
     }
+
+    fun clearAllData() {
+        viewModelScope.launch {
+            repository.clearAllData()
+        }
+    }
 }

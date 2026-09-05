@@ -4,48 +4,18 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Bag Handle -->
-    <path
-        android:fillColor="#00000000"
-        android:pathData="M44,38 C44,31 64,31 64,38"
-        android:strokeColor="#10B981"
-        android:strokeLineCap="round"
-        android:strokeWidth="4" />
 
-    <!-- Shopping Bag Body -->
+    <!-- Shopping Bag Handle (Centered, Minimal, Solid) -->
     <path
-        android:fillColor="#1E293B"
-        android:pathData="M34,42 L74,42 L71,76 C70.5,79 67.5,81 64,81 L44,81 C40.5,81 37.5,79 37,76 Z"
-        android:strokeColor="#38BDF8"
-        android:strokeLineJoin="round"
-        android:strokeWidth="2.5" />
+        android:fillColor="#00000000"
+        android:pathData="M48,46 C48,36.5 60,36.5 60,46"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="3.5" />
 
-    <!-- Rupee / Savings Symbol inside the Bag -->
-    <!-- Top Rupee Bar 1 -->
+    <!-- Shopping Bag Body (Solid Minimal White Silhouette, Centered at x=54, y=54) -->
     <path
-        android:fillColor="#00000000"
-        android:pathData="M48,52 L60,52"
-        android:strokeColor="#F59E0B"
-        android:strokeLineCap="round"
-        android:strokeWidth="2.5" />
-    <!-- Top Rupee Bar 2 -->
-    <path
-        android:fillColor="#00000000"
-        android:pathData="M48,56 L58,56"
-        android:strokeColor="#F59E0B"
-        android:strokeLineCap="round"
-        android:strokeWidth="2.5" />
-    <!-- Rupee Loop and Stem -->
-    <path
-        android:fillColor="#00000000"
-        android:pathData="M52,52 L52,60 C55,60 57,58.5 57,56 C57,53.5 55,52 52,52 L52,62 L59,71"
-        android:strokeColor="#F59E0B"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round"
-        android:strokeWidth="2.5" />
-
-    <!-- Savings Growth Star / Sparkle in Top Right -->
-    <path
-        android:fillColor="#34D399"
-        android:pathData="M72,32 L73.5,36.5 L78,38 L73.5,39.5 L72,44 L70.5,39.5 L66,38 L70.5,36.5 Z" />
+        android:fillColor="#FFFFFF"
+        android:pathData="M39,45 L69,45 C70.2,45 71.1,45.9 70.9,47.1 L68.5,69.1 C68.3,70.7 66.9,72 65.3,72 L42.7,72 C41.1,72 39.7,70.7 39.5,69.1 L37.1,47.1 C36.9,45.9 37.8,45 39,45 Z" />
 </vector>
+

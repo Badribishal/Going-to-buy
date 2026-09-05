@@ -31,98 +31,39 @@ class BuySpaceRepository(
             savingsDao.insertOrUpdateAccount(
                 SavingsAccountEntity(
                     id = 1,
-                    totalDeposited = 15000.0,
-                    unallocatedBalance = 3500.0,
+                    totalDeposited = 0.0,
+                    unallocatedBalance = 0.0,
                     lastUpdated = System.currentTimeMillis()
                 )
             )
-
-            // Seed initial realistic items on first app launch for immediate visual feedback
-            val p1 = ProductEntity(
-                name = "Sony WH-1000XM5 Noise Cancelling Headphones",
-                targetPrice = 26990.0,
-                savedAmount = 18000.0,
-                imageUrl = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80",
-                originalUrl = "https://www.amazon.in/dp/B09XS7JWHH",
-                storeName = "Amazon",
-                category = "Tech & Gadgets",
-                priority = "HIGH",
-                notes = "For work focus and travel",
-                status = ProductStatus.SAVING.name,
-                createdAt = System.currentTimeMillis() - 86400000L * 3
-            )
-
-            val p2 = ProductEntity(
-                name = "Keychron K2 Mechanical Keyboard",
-                targetPrice = 7500.0,
-                savedAmount = 7500.0,
-                imageUrl = "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500&q=80",
-                originalUrl = "https://keychron.in",
-                storeName = "Keychron",
-                category = "Tech & Gadgets",
-                priority = "MEDIUM",
-                notes = "Brown tactile switches",
-                status = ProductStatus.READY_TO_BUY.name,
-                createdAt = System.currentTimeMillis() - 86400000L * 7
-            )
-
-            val p3 = ProductEntity(
-                name = "Nike Pegasus 40 Running Shoes",
-                targetPrice = 11495.0,
-                savedAmount = 4500.0,
-                imageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80",
-                originalUrl = "https://www.nike.com/in",
-                storeName = "Nike",
-                category = "Fitness & Health",
-                priority = "HIGH",
-                notes = "Size 9 UK, marathon training",
-                status = ProductStatus.SAVING.name,
-                createdAt = System.currentTimeMillis() - 86400000L * 1
-            )
-
-            val id1 = productDao.insertProduct(p1)
-            val id2 = productDao.insertProduct(p2)
-            val id3 = productDao.insertProduct(p3)
-
-            activityDao.insertActivity(
-                ActivityLogEntity(
-                    type = ActivityType.PRODUCT_ADDED.name,
-                    title = "Added Sony WH-1000XM5",
-                    description = "Target: ${CurrencyFormatter.format(p1.targetPrice)}",
-                    productId = id1,
-                    timestamp = System.currentTimeMillis() - 86400000L * 3
-                )
-            )
-
-            activityDao.insertActivity(
-                ActivityLogEntity(
-                    type = ActivityType.MONEY_ADDED.name,
-                    title = "Added Savings Deposit",
-                    description = "Deposited ${CurrencyFormatter.format(15000.0)} to savings",
-                    amount = 15000.0,
-                    timestamp = System.currentTimeMillis() - 86400000L * 2
-                )
-            )
-
-            activityDao.insertActivity(
-                ActivityLogEntity(
-                    type = ActivityType.PRODUCT_FUNDED.name,
-                    title = "Keychron K2 Fully Funded!",
-                    description = "Reached target goal of ${CurrencyFormatter.format(p2.targetPrice)}",
-                    productId = id2,
-                    timestamp = System.currentTimeMillis() - 86400000L * 1
-                )
-            )
-
-            savingsDao.insertTransaction(
-                SavingsTransactionEntity(
-                    type = TransactionType.DEPOSIT.name,
-                    amount = 15000.0,
-                    note = "Initial savings deposit",
-                    timestamp = System.currentTimeMillis() - 86400000L * 2
+        } else if (existing.totalDeposited == 15000.0 && existing.unallocatedBalance == 3500.0) {
+            // Clean up any legacy example data to ensure the app is completely empty
+            productDao.deleteAllProducts()
+            savingsDao.deleteAllTransactions()
+            activityDao.clearAll()
+            savingsDao.insertOrUpdateAccount(
+                SavingsAccountEntity(
+                    id = 1,
+                    totalDeposited = 0.0,
+                    unallocatedBalance = 0.0,
+                    lastUpdated = System.currentTimeMillis()
                 )
             )
         }
+    }
+
+    suspend fun clearAllData() = withContext(Dispatchers.IO) {
+        productDao.deleteAllProducts()
+        savingsDao.deleteAllTransactions()
+        activityDao.clearAll()
+        savingsDao.insertOrUpdateAccount(
+            SavingsAccountEntity(
+                id = 1,
+                totalDeposited = 0.0,
+                unallocatedBalance = 0.0,
+                lastUpdated = System.currentTimeMillis()
+            )
+        )
     }
 
     suspend fun addProduct(product: ProductEntity): Long = withContext(Dispatchers.IO) {

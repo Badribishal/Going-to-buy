@@ -16,7 +16,7 @@ import com.example.data.model.SavingsTransactionEntity
         SavingsTransactionEntity::class,
         ActivityLogEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class BuySpaceDatabase : RoomDatabase() {
@@ -34,7 +34,9 @@ abstract class BuySpaceDatabase : RoomDatabase() {
                     context.applicationContext,
                     BuySpaceDatabase::class.java,
                     "buyspace_db"
-                ).build()
+                )
+                .fallbackToDestructiveMigration()
+                .build()
                 INSTANCE = instance
                 instance
             }

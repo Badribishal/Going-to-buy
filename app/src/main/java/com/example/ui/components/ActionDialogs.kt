@@ -588,18 +588,28 @@ fun AddMoneyDialog(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column {
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Add Savings",
+                            text = "Add Money to Savings Vault",
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onSurface,
+                            letterSpacing = (-0.3).sp
                         )
-                        Text(
-                            text = "Current Pool: ${CurrencyFormatter.format(currentBalance)}",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = "Current Vault Balance: ",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Text(
+                                text = CurrencyFormatter.format(currentBalance),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = EmeraldAccent
+                            )
+                        }
                     }
 
                     IconButton(onClick = onDismiss) {
@@ -615,8 +625,33 @@ fun AddMoneyDialog(
                         amountText = it.filter { c -> c.isDigit() || c == '.' }
                         error = null
                     },
-                    label = { Text("Amount to Add (₹)") },
-                    placeholder = { Text("5000") },
+                    label = {
+                        Text(
+                            text = "Deposit Amount",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium
+                        )
+                    },
+                    prefix = {
+                        Text(
+                            text = "₹ ",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = "5000",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Normal,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+                        )
+                    },
+                    textStyle = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    ),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     singleLine = true,
                     modifier = Modifier
@@ -625,12 +660,13 @@ fun AddMoneyDialog(
                     shape = RoundedCornerShape(12.dp)
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(14.dp))
 
                 // Quick preset amounts
                 Text(
                     text = "Quick Presets",
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.height(6.dp))
@@ -653,25 +689,39 @@ fun AddMoneyDialog(
                         ) {
                             Text(
                                 text = "+₹${preset.toInt()}",
-                                style = MaterialTheme.typography.labelSmall,
-                                fontWeight = FontWeight.SemiBold,
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary,
                                 textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 8.dp)
+                                    .padding(vertical = 10.dp)
                             )
                         }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(14.dp))
 
                 OutlinedTextField(
                     value = note,
                     onValueChange = { note = it },
-                    label = { Text("Note / Source (optional)") },
-                    placeholder = { Text("e.g. Salary savings, Birthday gift") },
+                    label = {
+                        Text(
+                            text = "Note / Source (optional)",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = "e.g. Salary savings, Birthday gift",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                        )
+                    },
+                    textStyle = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurface
+                    ),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp)
@@ -682,7 +732,8 @@ fun AddMoneyDialog(
                     Text(
                         text = error ?: "",
                         color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.Medium
                     )
                 }
 
@@ -706,7 +757,12 @@ fun AddMoneyDialog(
                 ) {
                     Icon(Icons.Default.Paid, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Deposit to Savings", fontWeight = FontWeight.SemiBold)
+                    Text(
+                        text = "Deposit to Savings Vault",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 0.2.sp
+                    )
                 }
             }
         }

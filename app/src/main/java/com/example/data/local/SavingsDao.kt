@@ -24,4 +24,10 @@ interface SavingsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransaction(tx: SavingsTransactionEntity): Long
+
+    @Query("DELETE FROM savings_transactions")
+    suspend fun deleteAllTransactions()
+
+    @Query("DELETE FROM savings_account")
+    suspend fun deleteAccount()
 }
