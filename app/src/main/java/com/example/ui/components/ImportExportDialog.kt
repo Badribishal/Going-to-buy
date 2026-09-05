@@ -529,6 +529,26 @@ fun ImportExportDialog(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
+                OutlinedButton(
+                    onClick = {
+                        viewModel.loadSampleRoomData()
+                        statusMessage = "Loaded sample Room data successfully!"
+                        isSuccessStatus = true
+                    },
+                    shape = RoundedCornerShape(14.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("btn_load_sample_room_data")
+                ) {
+                    Text(
+                        text = "Populate Sample Room Data",
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
                 // Done Button
                 Button(
                     onClick = onDismiss,

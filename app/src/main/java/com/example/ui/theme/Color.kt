@@ -3,6 +3,7 @@ package com.example.ui.theme
 import androidx.compose.ui.graphics.Color
 
 // Professional Polish Brand Colors
+val IconBackground = Color(0xFF0A1628)
 val ProfessionalBlue = Color(0xFF0061A4)
 val ProfessionalBlueDark = Color(0xFF004A7D)
 val ProfessionalNavyDeep = Color(0xFF001D36)

@@ -294,6 +294,12 @@ class BuySpaceViewModel(
         }
     }
 
+    fun loadSampleRoomData() {
+        viewModelScope.launch {
+            repository.populateDefaultRoomData()
+        }
+    }
+
     suspend fun getBackupJson(): String {
         return repository.exportAllDataJson()
     }

@@ -38,20 +38,10 @@ class BuySpaceRepository(
 
     suspend fun ensureAccountInitialized() = withContext(Dispatchers.IO) {
         val existing = savingsDao.getAccountSync()
-        if (existing == null) {
-            savingsDao.insertOrUpdateAccount(
-                SavingsAccountEntity(
-                    id = 1,
-                    totalDeposited = 0.0,
-                    unallocatedBalance = 0.0,
-                    lastUpdated = System.currentTimeMillis()
-                )
-            )
-        } else if (existing.totalDeposited == 15000.0 && existing.unallocatedBalance == 3500.0) {
-            // Clean up any legacy example data to ensure the app is completely empty
-            productDao.deleteAllProducts()
-            savingsDao.deleteAllTransactions()
-            activityDao.clearAll()
+        val products = productDao.getAllProductsList()
+        if (products.isEmpty()) {
+            populateDefaultRoomData()
+        } else if (existing == null) {
             savingsDao.insertOrUpdateAccount(
                 SavingsAccountEntity(
                     id = 1,
@@ -61,6 +51,200 @@ class BuySpaceRepository(
                 )
             )
         }
+    }
+
+    suspend fun populateDefaultRoomData() = withContext(Dispatchers.IO) {
+        val now = System.currentTimeMillis()
+        val dayMs = 86400000L
+
+        // Products
+        val p1 = ProductEntity(
+            name = "Sony WH-1000XM5 Wireless Headphones",
+            targetPrice = 26990.0,
+            savedAmount = 18000.0,
+            storeName = "Amazon",
+            category = "Tech & Gadgets",
+            priority = ProductPriority.HIGH.name,
+            notes = "Industry-leading noise cancellation for focused coding and travel",
+            status = ProductStatus.SAVING.name,
+            createdAt = now - 7 * dayMs
+        )
+        val p2 = ProductEntity(
+            name = "Kindle Paperwhite (16 GB)",
+            targetPrice = 14999.0,
+            savedAmount = 14999.0,
+            storeName = "Amazon",
+            category = "Books & Reading",
+            priority = ProductPriority.HIGH.name,
+            notes = "Fully funded! Ready to order. 6.8 inch 300 ppi glare-free display",
+            status = ProductStatus.READY_TO_BUY.name,
+            createdAt = now - 6 * dayMs
+        )
+        val p3 = ProductEntity(
+            name = "Keychron Q1 Pro Mechanical Keyboard",
+            targetPrice = 17500.0,
+            savedAmount = 6000.0,
+            storeName = "Keychron Store",
+            category = "Tech & Gadgets",
+            priority = ProductPriority.MEDIUM.name,
+            notes = "Custom tactile banana switches with double-gasket acoustic design",
+            status = ProductStatus.SAVING.name,
+            createdAt = now - 5 * dayMs
+        )
+        val p4 = ProductEntity(
+            name = "Bellroy Tokyo Totepack Compact",
+            targetPrice = 12900.0,
+            savedAmount = 0.0,
+            storeName = "Bellroy",
+            category = "Lifestyle & Bags",
+            priority = ProductPriority.LOW.name,
+            notes = "Minimalist recycled fabric laptop commute bag",
+            status = ProductStatus.SAVING.name,
+            createdAt = now - 3 * dayMs
+        )
+        val p5 = ProductEntity(
+            name = "Sony PS5 DualSense Wireless Controller",
+            targetPrice = 5990.0,
+            savedAmount = 5990.0,
+            storeName = "Sony Center",
+            category = "Gaming",
+            priority = ProductPriority.MEDIUM.name,
+            notes = "Midnight Black - Purchased last month",
+            status = ProductStatus.PURCHASED.name,
+            createdAt = now - 15 * dayMs
+        )
+
+        val id1 = productDao.insertProduct(p1)
+        val id2 = productDao.insertProduct(p2)
+        val id3 = productDao.insertProduct(p3)
+        val id4 = productDao.insertProduct(p4)
+        val id5 = productDao.insertProduct(p5)
+
+        // Savings Account: 38999 allocated + 6001 unallocated = 45000 total deposited
+        savingsDao.insertOrUpdateAccount(
+            SavingsAccountEntity(
+                id = 1,
+                totalDeposited = 45000.0,
+                unallocatedBalance = 6001.0,
+                lastUpdated = now
+            )
+        )
+
+        // Transactions
+        val transactions = listOf(
+            SavingsTransactionEntity(
+                type = TransactionType.DEPOSIT.name,
+                amount = 25000.0,
+                note = "Monthly savings deposit",
+                timestamp = now - 7 * dayMs
+            ),
+            SavingsTransactionEntity(
+                type = TransactionType.ALLOCATE.name,
+                amount = 12000.0,
+                productId = id1,
+                productName = p1.name,
+                note = "Initial allocation toward headphones",
+                timestamp = now - 7 * dayMs
+            ),
+            SavingsTransactionEntity(
+                type = TransactionType.ALLOCATE.name,
+                amount = 10000.0,
+                productId = id2,
+                productName = p2.name,
+                note = "Kickstarted Kindle savings fund",
+                timestamp = now - 6 * dayMs
+            ),
+            SavingsTransactionEntity(
+                type = TransactionType.DEPOSIT.name,
+                amount = 20000.0,
+                note = "Performance bonus deposit",
+                timestamp = now - 4 * dayMs
+            ),
+            SavingsTransactionEntity(
+                type = TransactionType.ALLOCATE.name,
+                amount = 6000.0,
+                productId = id1,
+                productName = p1.name,
+                note = "Top-up allocation toward headphones",
+                timestamp = now - 3 * dayMs
+            ),
+            SavingsTransactionEntity(
+                type = TransactionType.ALLOCATE.name,
+                amount = 4999.0,
+                productId = id2,
+                productName = p2.name,
+                note = "Completed 100% goal - Ready to buy!",
+                timestamp = now - 2 * dayMs
+            ),
+            SavingsTransactionEntity(
+                type = TransactionType.ALLOCATE.name,
+                amount = 6000.0,
+                productId = id3,
+                productName = p3.name,
+                note = "First allocation toward custom keyboard",
+                timestamp = now - 1 * dayMs
+            )
+        )
+        savingsDao.insertTransactions(transactions)
+
+        // Activity Logs
+        val activities = listOf(
+            ActivityLogEntity(
+                type = ActivityType.PRODUCT_ADDED.name,
+                title = "Added ${p1.name}",
+                description = "Goal: ${CurrencyFormatter.format(p1.targetPrice)} (${p1.storeName})",
+                productId = id1,
+                amount = p1.targetPrice,
+                timestamp = now - 7 * dayMs
+            ),
+            ActivityLogEntity(
+                type = ActivityType.MONEY_ADDED.name,
+                title = "Added ${CurrencyFormatter.format(25000.0)} to Savings",
+                description = "Total pool: ${CurrencyFormatter.format(25000.0)}",
+                amount = 25000.0,
+                timestamp = now - 7 * dayMs
+            ),
+            ActivityLogEntity(
+                type = ActivityType.MONEY_ALLOCATED.name,
+                title = "Allocated ${CurrencyFormatter.format(12000.0)}",
+                description = "Allocated to ${p1.name}",
+                productId = id1,
+                amount = 12000.0,
+                timestamp = now - 7 * dayMs
+            ),
+            ActivityLogEntity(
+                type = ActivityType.PRODUCT_ADDED.name,
+                title = "Added ${p2.name}",
+                description = "Goal: ${CurrencyFormatter.format(p2.targetPrice)} (${p2.storeName})",
+                productId = id2,
+                amount = p2.targetPrice,
+                timestamp = now - 6 * dayMs
+            ),
+            ActivityLogEntity(
+                type = ActivityType.MONEY_ADDED.name,
+                title = "Added ${CurrencyFormatter.format(20000.0)} to Savings",
+                description = "Total pool: ${CurrencyFormatter.format(45000.0)}",
+                amount = 20000.0,
+                timestamp = now - 4 * dayMs
+            ),
+            ActivityLogEntity(
+                type = ActivityType.PRODUCT_FUNDED.name,
+                title = "${p2.name} is Ready to Buy!",
+                description = "Goal reached: ${CurrencyFormatter.format(p2.targetPrice)}",
+                productId = id2,
+                amount = p2.targetPrice,
+                timestamp = now - 2 * dayMs
+            ),
+            ActivityLogEntity(
+                type = ActivityType.PRODUCT_PURCHASED.name,
+                title = "Purchased ${p5.name}",
+                description = "Achieved goal: ${CurrencyFormatter.format(p5.targetPrice)}",
+                productId = id5,
+                amount = p5.targetPrice,
+                timestamp = now - 15 * dayMs
+            )
+        )
+        activityDao.insertActivities(activities)
     }
 
     suspend fun clearAllData() = withContext(Dispatchers.IO) {
