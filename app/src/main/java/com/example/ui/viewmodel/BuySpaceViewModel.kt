@@ -9,6 +9,7 @@ import com.example.data.model.ProductPriority
 import com.example.data.model.ProductStatus
 import com.example.data.model.SavingsAccountEntity
 import com.example.data.model.SavingsTransactionEntity
+import com.example.data.repository.BackupSummary
 import com.example.data.repository.BuySpaceRepository
 import com.example.util.ExtractedProductInfo
 import com.example.util.LinkExtractor
@@ -291,5 +292,13 @@ class BuySpaceViewModel(
         viewModelScope.launch {
             repository.clearAllData()
         }
+    }
+
+    suspend fun getBackupJson(): String {
+        return repository.exportAllDataJson()
+    }
+
+    suspend fun restoreFromJson(json: String): Result<BackupSummary> {
+        return repository.importDataFromJson(json)
     }
 }

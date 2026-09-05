@@ -36,4 +36,10 @@ interface ProductDao {
 
     @Query("DELETE FROM products")
     suspend fun deleteAllProducts()
+
+    @Query("SELECT * FROM products ORDER BY createdAt DESC")
+    suspend fun getAllProductsList(): List<ProductEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertProducts(products: List<ProductEntity>)
 }

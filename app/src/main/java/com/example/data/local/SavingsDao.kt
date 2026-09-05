@@ -28,6 +28,12 @@ interface SavingsDao {
     @Query("DELETE FROM savings_transactions")
     suspend fun deleteAllTransactions()
 
+    @Query("SELECT * FROM savings_transactions ORDER BY timestamp DESC")
+    suspend fun getAllTransactionsList(): List<SavingsTransactionEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTransactions(transactions: List<SavingsTransactionEntity>)
+
     @Query("DELETE FROM savings_account")
     suspend fun deleteAccount()
 }

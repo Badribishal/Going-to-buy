@@ -15,6 +15,12 @@ interface ActivityDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertActivity(activity: ActivityLogEntity): Long
 
+    @Query("SELECT * FROM activity_logs ORDER BY timestamp DESC")
+    suspend fun getAllActivitiesList(): List<ActivityLogEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertActivities(activities: List<ActivityLogEntity>)
+
     @Query("DELETE FROM activity_logs")
     suspend fun clearAll()
 }

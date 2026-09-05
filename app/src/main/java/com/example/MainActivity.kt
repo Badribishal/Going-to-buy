@@ -34,6 +34,7 @@ import com.example.ui.components.AddProductModal
 import com.example.ui.components.AllocateMoneyDialog
 import com.example.ui.components.EditProductModal
 import com.example.ui.components.FloatingBottomNav
+import com.example.ui.components.ImportExportDialog
 import com.example.ui.components.NavTab
 import com.example.ui.components.ProductOptionsBottomSheet
 import com.example.ui.components.QuickAddBottomSheet
@@ -127,6 +128,7 @@ fun BuySpaceApp(
     var showQuickAddSheet by remember { mutableStateOf(false) }
     var showAddProductModal by remember { mutableStateOf(false) }
     var showAddMoneyDialog by remember { mutableStateOf(false) }
+    var showImportExportDialog by remember { mutableStateOf(false) }
     var productForAllocation by remember { mutableStateOf<ProductEntity?>(null) }
     var productForOptions by remember { mutableStateOf<ProductEntity?>(null) }
     var productForEdit by remember { mutableStateOf<ProductEntity?>(null) }
@@ -236,7 +238,8 @@ fun BuySpaceApp(
                     NavTab.ACTIVITY -> {
                         ActivityScreen(
                             activities = activities,
-                            listState = activityListState
+                            listState = activityListState,
+                            onImportExportClick = { showImportExportDialog = true }
                         )
                     }
                 }
@@ -325,6 +328,14 @@ fun BuySpaceApp(
             product = product,
             onSave = { updated -> viewModel.updateProduct(updated) },
             onDismiss = { productForEdit = null }
+        )
+    }
+
+    // Modal: Import & Export Data Backup
+    if (showImportExportDialog) {
+        ImportExportDialog(
+            viewModel = viewModel,
+            onDismiss = { showImportExportDialog = false }
         )
     }
 }
