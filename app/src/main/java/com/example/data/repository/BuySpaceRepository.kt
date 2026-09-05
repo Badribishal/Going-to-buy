@@ -39,9 +39,21 @@ class BuySpaceRepository(
     suspend fun ensureAccountInitialized() = withContext(Dispatchers.IO) {
         val existing = savingsDao.getAccountSync()
         val products = productDao.getAllProductsList()
-        if (products.isEmpty()) {
-            populateDefaultRoomData()
+
+        // Check if sample/example data was populated from prior runs
+        val hasSampleData = products.any {
+            it.name.contains("Sony WH-1000XM5", ignoreCase = true) ||
+            it.name.contains("Kindle Paperwhite", ignoreCase = true) ||
+            it.name.contains("Keychron Q1", ignoreCase = true) ||
+            it.name.contains("Bellroy Tokyo", ignoreCase = true) ||
+            it.name.contains("PS5 DualSense", ignoreCase = true)
+        } || (existing != null && (existing.totalDeposited == 45000.0 || existing.totalDeposited == 15000.0) && products.size <= 5)
+
+        if (hasSampleData) {
+            // Clean slate: reset all values to zero and empty panels
+            clearAllData()
         } else if (existing == null) {
+            // Fresh install: start with all values at zero
             savingsDao.insertOrUpdateAccount(
                 SavingsAccountEntity(
                     id = 1,
